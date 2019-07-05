@@ -1,0 +1,33 @@
+version: '3'
+services:
+  easydoc:
+      restart: always
+      image: doxterio/app:latest
+      environment:
+        ASPNETCORE_ENVIRONMENT: production
+        EmailService_Host: email-smtp.eu-west-1.amazonaws.com 
+        EmailService_Port: 587
+        EmailService_User: username
+        EmailService_Password: password
+        EmailService_SenderEmail: info@doxter.io
+        EmailService_SenderName: Doxter
+        RootUser_Login: admin@some.com
+        RootUser_Password: 123456
+      ports:
+        - 80:80
+      links:
+        - postgres
+      volumes:
+        - app_mk:/etc/machine_keys
+  postgres:
+      image: postgres:11.1
+      restart: always
+      environment:
+        POSTGRES_PASSWORD: postgres
+        PGDATA: /var/lib/postgresql/data/pgdata
+      volumes:
+        - db:/var/lib/postgresql/data
+
+volumes:
+  app_mk:
+  db:
